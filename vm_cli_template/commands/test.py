@@ -1,11 +1,11 @@
 import click
 
-from ..cli import pass_context
+from ..cli import Context, pass_context
 
 
 @click.group(invoke_without_command=True)
 @pass_context
-def cli(ctx):
+def cli(ctx: Context):
     '''
         This a command
     '''
@@ -15,7 +15,7 @@ def cli(ctx):
 
 @cli.command()
 @pass_context
-def test(ctx):
+def test(ctx: Context):
     '''
         This is a test
     '''

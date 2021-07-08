@@ -17,7 +17,7 @@ class Context:
     def __init__(self):
         self.verbose = VERBOSE
 
-        self.utils = None
+        self.utils: Utils = None
 
 # ------------------------------------------------------------------------------
 #
