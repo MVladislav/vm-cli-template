@@ -8,7 +8,7 @@ an template to copy to implement python with `setup.py` and `click` for **cli**.
 $pip install .
 ```
 
-## DEBUG
+### DEBUG
 
 ```sh
 $python3 -m venv ./venv
