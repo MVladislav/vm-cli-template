@@ -6,6 +6,7 @@ import subprocess
 import sys
 import time
 import unicodedata
+from pathlib import Path
 from shutil import which
 
 import coloredlogs
@@ -51,12 +52,51 @@ class Utils:
 
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         self.logging.debug(f'LOGGING-LEVEL          : {self.ctx.verbose}')
+        self.logging.debug(f'DISABLED SPLIT PROJECT : {self.ctx.disable_split_project}')
+        self.logging.debug(f'DISABLED SPLIT HOST    : {self.ctx.disable_split_host}')
         self.logging.debug(f'PRINT ONLY MODE        : {self.ctx.print_only_mode}')
+        self.logging.debug(f'PROJECT-PATH           : {self.create_service_path("host_example")}/')
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         print()
 
+    # --------------------------------------------------------------------------
+    #
+    #
+    #
+    # --------------------------------------------------------------------------
+
     def log_runBanner(self, msg: str) -> None:
         self.logging.info(f"[+] Running {msg}...")
+
+    # --------------------------------------------------------------------------
+    #
+    #
+    #
+    # --------------------------------------------------------------------------
+
+    def create_folder(self, path: str) -> None:
+        Path(path).mkdir(parents=True, exist_ok=True, mode=0o700)
+
+    def get_user_path(self) -> str:
+        return str(Path.home())
+
+    def create_service_folder(self, name: str, host: str = None) -> str:
+        path = f'{self.create_service_path(host)}/{name}'
+        self.create_folder(path)
+        return path
+
+    def create_service_path(self, host: str = None):
+        if not self.ctx.disable_split_host:
+            host = self.slugify(host)
+            host = "" if host == None else f"/{host}"
+        else:
+            host = ""
+        if not self.ctx.disable_split_project:
+            project = "" if self.ctx.project == None else f"/{self.ctx.project}"
+        else:
+            project = ""
+
+        return f'{self.ctx.base_path}{project}{host}'
 
     # --------------------------------------------------------------------------
     #
@@ -145,6 +185,8 @@ class Utils:
             return cmd_result
         except KeyboardInterrupt as k:
             self.logging.debug(f"process interupted! ({k})")
+        except Exception as e:
+            self.logging.exception(e)
         return cmd_result
 
     # --------------------------------------------------------------------------
@@ -199,3 +241,25 @@ class Utils:
         finally:
             st.close()
         return IP
+
+    # --------------------------------------------------------------------------
+    #
+    #
+    #
+    # --------------------------------------------------------------------------
+
+    def define_option_list(self, options, default_options=[], options_append=False, default_split_by=";"):
+        try:
+            # add options from params
+            if options != None and not options_append:
+                options = options.split(default_split_by)
+            # add options from params to existing options
+            elif options != None and options_append:
+                options = default_options + options.split(default_split_by)
+            # use existing options
+            else:
+                options = default_options
+            return options
+        except Exception as e:
+            self.logging.exception(e)
+        return []
