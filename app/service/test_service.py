@@ -1,3 +1,5 @@
+import logging
+
 from ..main import Context
 from ..utils.utils import Utils
 
@@ -19,7 +21,7 @@ class TestService:
     def __init__(self, ctx: Context):
         self.ctx: Context = ctx
         self.utils: Utils = self.ctx.utils
-        self.utils.logging.debug('test-service is initiated')
+        logging.log(logging.DEBUG, 'test-service is initiated')
 
     # --------------------------------------------------------------------------
     #

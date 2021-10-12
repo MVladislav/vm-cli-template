@@ -32,19 +32,22 @@ class LogHelper:
     #
     # --------------------------------------------------------------------------
 
-    def __init__(self):
+    def __init__(self, logging_verbose=None):
+        if logging_verbose == None:
+            logging_verbose = LOGGING_VERBOSE
+
         # configure logger for requested verbosity
-        if LOGGING_VERBOSE >= 4:
+        if logging_verbose >= 4:
             log_format = '[%(asctime)s,%(msecs)03d] %(name)s[%(process)d] {%(lineno)-6d: (%(funcName)-30s)} %(levelname)-7s - %(message)s'
-        elif LOGGING_VERBOSE >= 3:
+        elif logging_verbose >= 3:
             log_format = '[%(filename)-18s/%(module)-15s - %(lineno)-6d: (%(funcName)-30s)]:: %(levelname)-7s - %(message)s'
-        elif LOGGING_VERBOSE >= 2:
-            log_format = '%(levelname)-7s - %(message)s ac'
-        elif LOGGING_VERBOSE >= 1:
+        elif logging_verbose >= 2:
             log_format = '%(levelname)-7s - %(message)s'
-        elif LOGGING_VERBOSE >= 0:
+        elif logging_verbose >= 1:
+            log_format = '%(levelname)-7s - %(message)s'
+        elif logging_verbose >= 0:
             log_format = '%(message)s'
-        elif LOGGING_VERBOSE < 0:
+        elif logging_verbose < 0:
             log_format = '%(message)s'
 
         # create a log objectfrom verboselogs

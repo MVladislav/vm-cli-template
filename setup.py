@@ -10,17 +10,8 @@ from setuptools import find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.install import install
 
-from app.utils.config import PROJECT_NAME, VERSION
-
-# ------------------------------------------------------------------------------
-#
-#
-#
-# ------------------------------------------------------------------------------
-
-LICENSE = "GNU AGPLv3"
-AUTHOR = "MVladislav"
-AUTHOR_EMAIL = "info@mvladislav.online"
+from app.utils.config import (AUTHOR, AUTHOR_EMAIL, LICENSE, PROJECT_NAME,
+                              VERSION)
 
 # ------------------------------------------------------------------------------
 #

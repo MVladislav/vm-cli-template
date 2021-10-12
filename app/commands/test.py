@@ -1,3 +1,4 @@
+import logging
 import sys
 
 import click
@@ -41,15 +42,15 @@ def test(ctx: Context, host, port, options, options_append):
     '''
     service: TestService = ctx.service
     try:
-        service.utils.logging.info(f"this is a service call")
+        logging.log(logging.INFO, f"this is a service call")
 
         options = service.utils.define_option_list(options=options, options_append=options_append, default_split_by=default_split_by)
 
     except KeyboardInterrupt as k:
-        service.utils.logging.debug(f"process interupted! ({k})")
+        logging.log(logging.DEBUG, f"process interupted! ({k})")
         sys.exit(5)
     except Exception as e:
-        service.utils.logging.exception(e)
+        logging.log(logging.CRITICAL, e)
         sys.exit(2)
 
 
