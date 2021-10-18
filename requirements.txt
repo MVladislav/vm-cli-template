@@ -1,4 +1,17 @@
+starlette
 click
 coloredlogs
 verboselogs
-starlette
+string-color
+progressbar2
+# alive-progress
+# tqdm
+
+# requests
+# beautifulsoup4
+# bs4
+# mechanize
+# opencage
+# phonenumbers
+# colorama
+# dnspython

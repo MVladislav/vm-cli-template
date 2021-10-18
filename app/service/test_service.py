@@ -1,7 +1,6 @@
 import logging
 
-from ..main import Context
-from ..utils.utils import Utils
+from ..utils.utils import Context, Utils
 
 # ------------------------------------------------------------------------------
 #

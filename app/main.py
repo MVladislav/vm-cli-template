@@ -1,11 +1,12 @@
 import logging
 import os
+import time
 
 import click
 
-from .utils.config import BASE_PATH, PROJECT_NAME, VERSION
+from .utils.config import VERSION
 from .utils.logHelper import LogHelper
-from .utils.utils import Utils
+from .utils.utils import Context, Utils, pass_context
 
 # ------------------------------------------------------------------------------
 #
@@ -28,20 +29,6 @@ print('* https://github.com/MVladislav                                *')
 print('****************************************************************')
 print()
 
-# ------------------------------------------------------------------------------
-#
-#
-#
-# ------------------------------------------------------------------------------
-
-
-class Context:
-
-    def __init__(self):
-        self.project = PROJECT_NAME
-        self.base_path = BASE_PATH
-
-        self.utils: Utils = None
 
 # ------------------------------------------------------------------------------
 #
@@ -76,8 +63,6 @@ class ComplexCLI(click.MultiCommand):
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'], ignore_unknown_options=True, auto_envvar_prefix='COMPLEX')
 
-pass_context = click.make_pass_decorator(Context, ensure=True)
-
 
 @click.command(cls=ComplexCLI, context_settings=CONTEXT_SETTINGS)
 @click.version_option(VERSION)
@@ -90,23 +75,61 @@ pass_context = click.make_pass_decorator(Context, ensure=True)
 @pass_context
 def cli(ctx: Context, verbose, home, project, disable_split_project, disable_split_host, print_only_mode):
     '''
-        Welcome to vm cli template
-    '''
-    logging.log(logging.DEBUG, 'init start_up...')
+        Welcome to {PROJECT_NAME}
 
-    # SET: default global values
-    if verbose != None:
-        ctx.logging_verbose = verbose
-    if project != None:
-        ctx.project = project
-    if home != None:
-        ctx.base_path = home
-    ctx.disable_split_project = disable_split_project
-    ctx.disable_split_host = disable_split_host
-    ctx.print_only_mode = print_only_mode
+        Example: "{PROJECT_NAME} -vv -p 'nice project' -dsh --home . <COMMAND> [OPTIONS] <COMMAND> [OPTIONS]"
+    '''
 
     # INIT: log helper global
     LogHelper(logging_verbose=verbose)
 
+    logging.log(logging.DEBUG, 'init start_up...')
+
     # INIT: utils defaults to use ctx global
     ctx.utils = Utils(ctx)
+
+    for i in range(100):
+        ctx.utils.progress(id=101, value=i, description="startup")
+        time.sleep(0.03)
+
+    # SET: default global values
+    ctx.utils.progress(value=10, id=100, description="init")
+    time.sleep(0.03)
+
+    if verbose != None:
+        ctx.logging_verbose = verbose
+
+    ctx.utils.progress(value=20, id=100)
+    time.sleep(0.03)
+
+    if project != None:
+        ctx.project = project
+
+    ctx.utils.progress(value=30, id=100)
+    time.sleep(0.2)
+
+    if home != None:
+        ctx.base_path = home
+
+    ctx.utils.progress(value=40, id=100)
+    time.sleep(0.2)
+
+    ctx.disable_split_project = disable_split_project
+
+    ctx.utils.progress(value=50, id=100)
+    time.sleep(0.2)
+
+    ctx.disable_split_host = disable_split_host
+
+    ctx.utils.progress(value=60, id=100)
+    time.sleep(0.2)
+
+    ctx.print_only_mode = print_only_mode
+
+    ctx.utils.progress(value=70, id=100)
+    time.sleep(0.2)
+
+    ctx.utils.update(ctx=ctx)
+
+    ctx.utils.progress(value=100, id=100)
+    time.sleep(0.2)
