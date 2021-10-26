@@ -90,7 +90,7 @@ def cli(ctx: Context, verbose, home, project, disable_split_project, disable_spl
 
     for i in range(100):
         ctx.utils.progress(id=101, value=i, description="startup")
-        time.sleep(0.03)
+        time.sleep(0.005)
 
     # SET: default global values
     ctx.utils.progress(value=10, id=100, description="init")

@@ -13,7 +13,6 @@ from typing import Any, Dict
 import click
 from progressbar import ETA, Bar, Counter, ProgressBar, Timer
 from stringcolor import bold
-from tqdm import tqdm
 
 from .config import BASE_PATH, ENV_MODE, LOGGING_LEVEL, PROJECT_NAME, VERSION
 from .defaultLogBanner import log_runBanner

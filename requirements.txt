@@ -7,7 +7,9 @@ progressbar2
 # alive-progress
 # tqdm
 
-# requests
+maxminddb
+requests
+
 # beautifulsoup4
 # bs4
 # mechanize
