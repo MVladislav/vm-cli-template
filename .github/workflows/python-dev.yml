@@ -129,7 +129,7 @@ jobs:
       - name: archive production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: vm-cli-app
+          name: vm_cli
           path: |
             dist
 
@@ -170,7 +170,7 @@ jobs:
       - name: download build result from build step
         uses: actions/download-artifact@v2
         with:
-          name: vm-cli-app
+          name: vm_cli
 
       - name: un-tar final result
         run: |
