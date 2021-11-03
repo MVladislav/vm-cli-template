@@ -174,12 +174,11 @@ jobs:
 
       - name: un-tar final result
         run: |
-          ls -la
-          tar -xvzf VM-CLI-*.tar.gz
-          rm VM-CLI-*.tar.gz
+          tar -xvzf vm_cli-*.tar.gz
+          rm vm_cli-*.tar.gz
 
       - name: install final result
         run: |
-          pip3 install VM-CLI-*/
+          pip3 install vm_cli-*/
 
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
