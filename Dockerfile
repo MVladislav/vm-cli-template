@@ -45,7 +45,7 @@ ARG VM_BASE_PATH="/vm-cli/scans/"
 # ------------------------------------------------------------------------------
 
 # INSTALL app with dependencies
-RUN pip3 install --no-cache-dir --use-feature=in-tree-build .
+RUN pip3 install --no-cache-dir .
 
 # CLEAN up
 RUN \
