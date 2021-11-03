@@ -1,6 +1,5 @@
 import logging
 import os
-import time
 
 import click
 
@@ -88,48 +87,15 @@ def cli(ctx: Context, verbose, home, project, disable_split_project, disable_spl
     # INIT: utils defaults to use ctx global
     ctx.utils = Utils(ctx)
 
-    for i in range(100):
-        ctx.utils.progress(id=101, value=i, description="startup")
-        time.sleep(0.005)
-
     # SET: default global values
-    ctx.utils.progress(value=10, id=100, description="init")
-    time.sleep(0.03)
-
     if verbose != None:
         ctx.logging_verbose = verbose
-
-    ctx.utils.progress(value=20, id=100)
-    time.sleep(0.03)
-
     if project != None:
         ctx.project = project
-
-    ctx.utils.progress(value=30, id=100)
-    time.sleep(0.2)
-
     if home != None:
         ctx.base_path = home
-
-    ctx.utils.progress(value=40, id=100)
-    time.sleep(0.2)
-
     ctx.disable_split_project = disable_split_project
-
-    ctx.utils.progress(value=50, id=100)
-    time.sleep(0.2)
-
     ctx.disable_split_host = disable_split_host
-
-    ctx.utils.progress(value=60, id=100)
-    time.sleep(0.2)
-
     ctx.print_only_mode = print_only_mode
 
-    ctx.utils.progress(value=70, id=100)
-    time.sleep(0.2)
-
     ctx.utils.update(ctx=ctx)
-
-    ctx.utils.progress(value=100, id=100)
-    time.sleep(0.2)

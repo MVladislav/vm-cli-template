@@ -3,9 +3,8 @@ click
 coloredlogs
 verboselogs
 string-color
+progress
 progressbar2
-# alive-progress
-# tqdm
 
 maxminddb
 requests
