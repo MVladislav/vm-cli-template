@@ -9,6 +9,8 @@
 - [Python CLI template](#python-cli-template)
   - [install](#install)
     - [DEBUG](#debug)
+  - [run](#run)
+    - [docker](#docker)
 
 ---
 
@@ -26,4 +28,15 @@ $pip3 install starlette && pip3 install .
 $python3 -m venv ./venv
 $source venv/bin/activate
 $pip3 install starlette && pip3 install -v --editable .
+```
+
+## run
+
+### docker
+
+run **docker-compose** build and up
+
+```sh
+$DOCKER_BUILDKIT=1 docker-compose build
+$DOCKER_BUILDKIT=1 docker-compose up
 ```
