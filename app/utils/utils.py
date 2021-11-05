@@ -321,7 +321,7 @@ class Utils:
             if os.geteuid() != 0:
                 msg = "hay [sudo] password for %u: "
                 return subprocess.check_call(f"sudo -v -p '{msg}'", shell=True)
-        except Exception:
+        except:
             pass
         return -1
 
@@ -330,11 +330,18 @@ class Utils:
         try:
             st.connect(('10.255.255.255', 1))
             IP = st.getsockname()[0]
-        except Exception:
+        except:
             IP = '127.0.0.1'
         finally:
             st.close()
         return IP
+
+    def uri_validator(self, url: str):
+        try:
+            result = urlparse(url)
+            return all([result.scheme, result.netloc])
+        except:
+            return False
 
     # --------------------------------------------------------------------------
     #

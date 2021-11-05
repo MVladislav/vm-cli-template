@@ -51,7 +51,7 @@ def test(ctx: Context, host, port, options, options_append):
         logging.log(logging.DEBUG, f"process interupted! ({k})")
         sys.exit(5)
     except Exception as e:
-        logging.log(logging.CRITICAL, e)
+        logging.log(logging.CRITICAL, e, exc_info=True)
         sys.exit(2)
 
 # ------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ def geo(ctx: Context, url, ip, datafile):
         logging.log(logging.DEBUG, f"process interupted! ({k})")
         sys.exit(5)
     except Exception as e:
-        logging.log(logging.CRITICAL, e)
+        logging.log(logging.CRITICAL, e, exc_info=True)
         sys.exit(2)
 
 

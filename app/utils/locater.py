@@ -71,7 +71,7 @@ class Locator:
                             f.write(response.content)
                             f.flush()
                     except Exception as ex:
-                        logging.log(logging.CRITICAL, '[FAIL]', ex)
+                        logging.log(logging.CRITICAL, '[FAIL]', ex, exc_info=True)
                         logging.log(logging.WARNING, 'Failed to Download Database')
                         # NOTE: sys.exit(1)
 
@@ -83,7 +83,7 @@ class Locator:
                         os.remove(f'{self.path}{GEO_DB_ZIP_FNAME}')
                         shutil.move(f'{self.path}/{extract_file}', f'{self.path}{GEO_DB_FNAME}')
                     except IOError as ioe:
-                        logging.log(logging.CRITICAL, '[FAIL]', ioe)
+                        logging.log(logging.CRITICAL, '[FAIL]', ioe, exc_info=True)
                         logging.log(logging.WARNING, 'Failed to Decompress Database')
                         # NOTE: sys.exit(1)
 
@@ -95,7 +95,7 @@ class Locator:
                     logging.log(logging.WARNING, 'Invalid Choice')
                     # NOTE: sys.exit(1)
         except Exception as e:
-            logging.log(logging.CRITICAL, e)
+            logging.log(logging.CRITICAL, e, exc_info=True)
 
     def query(self) -> None:
         try:
@@ -125,4 +125,4 @@ class Locator:
                 logging.log(logging.WARNING, 'Failed to Retrieve Records', ex)
                 return
         except Exception as e:
-            logging.log(logging.CRITICAL, e)
+            logging.log(logging.CRITICAL, e, exc_info=True)

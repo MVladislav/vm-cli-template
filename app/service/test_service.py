@@ -29,4 +29,7 @@ class TestService:
     # --------------------------------------------------------------------------
 
     def test(self):
-        pass
+        try:
+            pass
+        except Exception as e:
+            logging.log(logging.CRITICAL, e, exc_info=True)
