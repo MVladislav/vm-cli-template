@@ -8,7 +8,7 @@
 
 - [Python CLI template](#python-cli-template)
   - [install](#install)
-    - [DEBUG](#debug)
+    - [DEBUG `(PREFERRED)`](#debug-preferred)
   - [run](#run)
     - [docker](#docker)
 
@@ -22,12 +22,13 @@ an template to copy to implement python with `setup.py` and `click` for **cli**.
 $pip3 install starlette && pip3 install .
 ```
 
-### DEBUG
+### DEBUG `(PREFERRED)`
 
 ```sh
-$python3 -m venv ./venv
-$source venv/bin/activate
-$pip3 install starlette && pip3 install -v --editable .
+$mkdir -p "$HOME/.vm_cli"
+$python3 -m venv "$HOME/.vm_cli/venv"
+$source "$HOME/.vm_cli/venv/bin/activate"
+$pip3 install -v --editable .
 ```
 
 ## run
