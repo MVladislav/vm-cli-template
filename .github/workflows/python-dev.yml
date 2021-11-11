@@ -144,7 +144,7 @@ jobs:
       - name: archive production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ PROJECT_NAME }}
+          name: ${{ env.PROJECT_NAME }}
           path: |
             dist
 
@@ -185,14 +185,14 @@ jobs:
       - name: download build result from build step
         uses: actions/download-artifact@v2
         with:
-          name: ${{ PROJECT_NAME }}
+          name: ${{ env.PROJECT_NAME }}
 
       - name: un-tar final result
         run: |
-          tar -xvzf "${PROJECT_NAME}-*.tar.gz"
-          rm "${PROJECT_NAME}-*.tar.gz"
+          tar -xvzf ${{ env.PROJECT_NAME }}-*.tar.gz
+          rm ${{ env.PROJECT_NAME }}-*.tar.gz
 
       - name: install final result
-        run: pip3 install "${PROJECT_NAME}-*/"
+        run: pip3 install ${{ env.PROJECT_NAME }}-*/
 
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
