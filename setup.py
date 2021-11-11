@@ -2,7 +2,9 @@
     will setup the project, by install it local
     with needed dependencies
 """
+import logging
 import re
+import sys
 import unicodedata
 from subprocess import check_call
 
@@ -10,8 +12,37 @@ from setuptools import find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.install import install
 
-from app.utils.config import (AUTHOR, AUTHOR_EMAIL, LICENSE, PROJECT_NAME,
-                              VERSION)
+try:
+    from starlette.config import Config
+except ImportError:
+    source_to_install = 'starlette'
+    logging.log(logging.CRITICAL, f'Failed to Import {source_to_install}')
+    try:
+        # choice = input(f'[*] Attempt to Auto-istall {source_to_install}? [y/N]')
+        choice = 'y'
+    except KeyboardInterrupt:
+        logging.log(logging.INFO, 'User Interrupted Choice')
+        sys.exit(1)
+    if choice.strip().lower()[0] == 'y':
+        logging.log(logging.INFO, f'Attempting to Install {source_to_install}')
+        sys.stdout.flush()
+        try:
+            import subprocess
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", source_to_install])
+            from starlette.config import Config
+            logging.log(logging.INFO, '[DONE]')
+        except Exception:
+            logging.log(logging.CRITICAL, '[FAIL]')
+            sys.exit(1)
+    elif choice.strip().lower()[0] == 'n':
+        logging.log(logging.INFO, 'User Denied Auto-install')
+        sys.exit(1)
+    else:
+        logging.log(logging.WARNING, 'Invalid Decision')
+        sys.exit(1)
+
+config_project = Config('.env_project')
+PROJECT_NAME: str = config_project('PROJECT_NAME')
 
 # ------------------------------------------------------------------------------
 #
@@ -91,13 +122,13 @@ PROJECT_NAME_SLUG = slugify(PROJECT_NAME)
 
 setup(
     name=PROJECT_NAME,
-    version=VERSION,
-    license=LICENSE,
+    version='0.0.1',
+    license='GNU AGPLv3',
     description=PROJECT_NAME,
     long_description=read_long_description(),
     long_description_content_type="text/markdown",
-    author=AUTHOR,
-    author_email=AUTHOR_EMAIL,
+    author='MVladislav',
+    author_email='info@mvladislav.online',
     # package_dir={"": "app"},
     # packages=find_packages(where="app"),
     packages=find_packages(),

@@ -9,7 +9,7 @@ import time
 import unicodedata
 from pathlib import Path
 from shutil import which
-from typing import Any, Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 import click
 # from libnmap.objects.report import NmapReport
@@ -19,7 +19,7 @@ from progress.spinner import PixelSpinner
 from progressbar import ETA, Bar, Counter, ProgressBar, Timer
 from stringcolor import bold
 
-from .config import BASE_PATH, ENV_MODE, LOGGING_LEVEL, PROJECT_NAME, VERSION
+from .config import BASE_PATH, ENV_MODE, LOGGING_LEVEL, PROJECT_NAME
 from .defaultLogBanner import log_runBanner
 
 # ------------------------------------------------------------------------------
@@ -79,7 +79,6 @@ class Utils:
             logging.log(logging.DEBUG, f'DISABLED SPLIT HOST    : {bold(self.ctx.disable_split_host)}')
             logging.log(logging.DEBUG, f'PRINT ONLY MODE        : {bold(self.ctx.print_only_mode)}')
             logging.log(logging.DEBUG, f'PROJECT-PATH           : {bold(self.create_service_path("host_example"))}{bold("/")}')
-            logging.log(logging.DEBUG, f'PROJECT-VERSION        : {bold(VERSION)}')
             logging.log(logging.DEBUG, f'ENV-MODE               : {bold(ENV_MODE)}')
             print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
             print()
@@ -359,7 +358,8 @@ class Utils:
 
             if self.ctx.progress.get(id) is None:
                 self.ctx.progress[id] = ProgressBar(
-                    widgets=[description, ' [', Timer(), '] ', Bar(marker='O'), ' [', Counter(format='%(value)02d/%(max_value)d'), ']', ' (', ETA(), ') '],
+                    widgets=[description, ' [', Timer(), '] ', Bar(marker='O'), ' [', Counter(
+                        format='%(value)02d/%(max_value)d'), ']', ' (', ETA(), ') '],
                     maxval=maxval).start()
             bar: ProgressBar = self.ctx.progress.get(id)
             bar.update(value=value)

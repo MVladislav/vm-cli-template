@@ -13,6 +13,7 @@
 !test/**
 
 !.dockerignore
+!.env_project
 !.env_template
 !.pre-commit-config.yaml
 !.gitignore
