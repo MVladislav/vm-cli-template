@@ -35,7 +35,14 @@ jobs:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   test:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
+        python-version:
+          - 3.8
+          - 3.9
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -44,17 +51,24 @@ jobs:
 
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-      - name: set up Python 3.9
+      - name: set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: ${{ matrix.python-version }}
 
       - name: install dependencies
         run: |
           python3 -m pip install --upgrade pip
           pip3 install pylint flake8 pytest
-          # install requirements if no setup.py is existing, else it will insall in next step
+          # install requirements if no setup.py is existing, else it will install in next step
           if [[ -f requirements.txt && ! -f setup.py ]]; then pip3 install -r requirements.txt; fi
+          pip3 install -r requirements_dev.txt
+          pip3 install tox-gh-actions
+
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+      - name: test with tox
+        run: tox | tee tox.log
 
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -88,6 +102,7 @@ jobs:
         with:
           name: python test report
           path: |
+            tox.log
             pylint.log
             flake8_1.log
             flake8_2.log
@@ -129,7 +144,7 @@ jobs:
       - name: archive production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: vm_cli
+          name: ${{ PROJECT_NAME }}
           path: |
             dist
 
@@ -170,15 +185,14 @@ jobs:
       - name: download build result from build step
         uses: actions/download-artifact@v2
         with:
-          name: vm_cli
+          name: ${{ PROJECT_NAME }}
 
       - name: un-tar final result
         run: |
-          tar -xvzf vm_cli-*.tar.gz
-          rm vm_cli-*.tar.gz
+          tar -xvzf "${PROJECT_NAME}-*.tar.gz"
+          rm "${PROJECT_NAME}-*.tar.gz"
 
       - name: install final result
-        run: |
-          pip3 install vm_cli-*/
+        run: pip3 install "${PROJECT_NAME}-*/"
 
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
