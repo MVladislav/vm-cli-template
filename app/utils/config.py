@@ -54,11 +54,12 @@ config_project = Config('.env_project')
 # ------------------------------------------------------------------------------
 
 PROJECT_NAME: str = config_project('PROJECT_NAME')
-ENV_MODE: str = config_project('ENV_MODE', default='KONS')
+VERSION: str = config_project('VERSION')
+ENV_MODE: str = config('ENV_MODE', default='KONS')
 
 # NOTICE | SPAM | DEBUG | VERBOSE | INFO | NOTICE | WARNING | SUCCESS | ERROR | CRITICAL
-LOGGING_LEVEL: str = config_project('LOGGING_LEVEL',  default='DEBUG')
-LOGGING_VERBOSE: int = config_project('LOGGING_VERBOSE', cast=int,  default=0)
+LOGGING_LEVEL: str = config('LOGGING_LEVEL',  default='DEBUG')
+LOGGING_VERBOSE: int = config('LOGGING_VERBOSE', cast=int,  default=0)
 DEBUG: bool = True if LOGGING_LEVEL == 'DEBUG' or \
     LOGGING_LEVEL == 'VERBOSE' or LOGGING_LEVEL == 'SPAM' else False
 DEBUG_RELOAD: bool = True if DEBUG else False
@@ -70,7 +71,7 @@ DEBUG_RELOAD: bool = True if DEBUG else False
 # ------------------------------------------------------------------------------
 
 
-BASE_PATH: str = config_project('VM_BASE_PATH', default=f'{Path.home()}/Documents/{PROJECT_NAME}')
+BASE_PATH: str = config('VM_BASE_PATH', default=f'{Path.home()}/Documents/{PROJECT_NAME}')
 
 # ------------------------------------------------------------------------------
 #

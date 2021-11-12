@@ -45,6 +45,8 @@ $DOCKER_BUILDKIT=1 docker-compose build
 $DOCKER_BUILDKIT=1 docker-compose up
 ```
 
+---
+
 ## code quality and git
 
 ### pre-commit
