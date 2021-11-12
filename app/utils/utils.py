@@ -133,9 +133,9 @@ class Utils:
             index_to_check = 1 if command_list[index_to_check] == 'sudo' else index_to_check
 
             if self.is_tool(command_list[index_to_check]):
-                sub_p = Popen(command_list)
-                while is_running:
-                    time.sleep(600)
+                with Popen(command_list) as sub_p:
+                    while is_running:
+                        time.sleep(600)
             else:
                 logging.log(logging.ERROR, f'the command "{command_list[index_to_check]}", did not exist')
         # termination with Ctrl+C
@@ -223,9 +223,9 @@ class Utils:
                     logging.log(logging.ERROR, f'the command "{command_list[index_to_check]}", did not exist')
                     sub_err = b"MISSING_COMMAND"
 
-                if sub_std is not None and type(sub_std) is bytes:
+                if sub_std is not None and isinstance(sub_std, bytes):
                     sub_std_res = sub_std.decode()
-                if sub_err is not None and type(sub_err) is bytes and len(sub_err) > 0:
+                if sub_err is not None and isinstance(sub_err, bytes) and len(sub_err) > 0:
                     sub_err_res = sub_err.decode()
                     logging.log(logging.ERROR, sub_err)
 
@@ -369,8 +369,8 @@ class Utils:
                     widgets=[description, ' [', Timer(), '] ', Bar(marker='O'), ' [', Counter(
                         format='%(value)02d/%(max_value)d'), ']', ' (', ETA(), ') '],
                     maxval=maxval).start()
-            bar: ProgressBar = self.ctx.progress.get(id)
-            bar.update(value=value)
+            bar_p: ProgressBar = self.ctx.progress.get(id)
+            bar_p.update(value=value)
             if value >= maxval:
                 print()
         except Exception as e:

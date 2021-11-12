@@ -12,7 +12,7 @@ class LoggingMsgType(Enum):
     EXCEPTION = "EXCEPTION"
 
 
-def loggingMsgHandler(type: LoggingMsgType) -> Union[str, None]:
+def loggingMsgHandler(type: Union[LoggingMsgType, None]) -> Union[str, None]:
     if type == LoggingMsgType.NOT_EMPTY:
         return "the value is not empty"
     elif type == LoggingMsgType.EMPTY:
