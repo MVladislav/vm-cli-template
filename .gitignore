@@ -9,8 +9,8 @@
 !app/**
 !scripts/
 !scripts/**
-!test/
-!test/**
+!tests/
+!tests/**
 
 !.dockerignore
 !.env_project

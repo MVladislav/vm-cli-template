@@ -63,6 +63,6 @@ $pre-commit install
 ```sh
 $mypy app
 $flake8 app
-$pytest
+$pytest --cov=tests
 $tox
 ```

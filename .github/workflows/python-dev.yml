@@ -99,10 +99,10 @@ jobs:
           python3 -m pytest |
           tee pytest.log
 
-      - name: upload flake8_1.log as artifact
+      - name: upload all logs as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: python test report
+          name: python test reports
           path: |
             tox.log
             pylint.log
