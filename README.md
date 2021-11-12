@@ -62,7 +62,7 @@ $pre-commit install
 
 ```sh
 $mypy app
-$flake8 src
+$flake8 app
 $pytest
 $tox
 ```

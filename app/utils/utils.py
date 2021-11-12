@@ -3,13 +3,14 @@ import os
 import random
 import re
 import socket
-import subprocess
 import sys
 import time
 import unicodedata
 from pathlib import Path
 from shutil import which
-from typing import Dict, List, Tuple, Union
+from subprocess import PIPE, Popen, check_call
+from typing import Any, Dict, List, Tuple, Union
+from urllib.parse import urlparse
 
 import click
 # from libnmap.objects.report import NmapReport
@@ -36,15 +37,17 @@ class Context:
     def __init__(self):
 
         logging.log(logging.DEBUG, 'init context...')
-        self.project = PROJECT_NAME
-        self.base_path = BASE_PATH
 
-        self.utils: Utils = None
+        self.service: Any = None
 
-        self.logging_verbose = None
-        self.disable_split_project = None
-        self.disable_split_host = None
-        self.print_only_mode = None
+        self.project: str = PROJECT_NAME
+        self.base_path: str = BASE_PATH
+
+        self.utils: Union[Utils, None] = None
+
+        self.disable_split_project: Union[bool, None] = None
+        self.disable_split_host: Union[bool, None] = None
+        self.print_only_mode: Union[bool, None] = None
 
 
 pass_context = click.make_pass_decorator(Context, ensure=True)
@@ -74,7 +77,6 @@ class Utils:
             print()
             print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
             logging.log(logging.DEBUG, f'LOGGING-LEVEL          : {bold(LOGGING_LEVEL)}')
-            logging.log(logging.DEBUG, f'LOGGING-VERBOSITY      : {bold(self.ctx.logging_verbose)}')
             logging.log(logging.DEBUG, f'DISABLED SPLIT PROJECT : {bold(self.ctx.disable_split_project)}')
             logging.log(logging.DEBUG, f'DISABLED SPLIT HOST    : {bold(self.ctx.disable_split_host)}')
             logging.log(logging.DEBUG, f'PRINT ONLY MODE        : {bold(self.ctx.print_only_mode)}')
@@ -95,25 +97,25 @@ class Utils:
     def get_user_path(self) -> str:
         return str(Path.home())
 
-    def create_service_folder(self, name: str, host: str = None) -> str:
+    def create_service_folder(self, name: str, host: Union[str, None] = None) -> str:
         path = f'{self.create_service_path(host)}/{name}'
         self.create_folder(path)
         logging.log(logging.DEBUG, f'new folder created:: {path}')
         return path
 
-    def create_service_path(self, host: str = None):
+    def create_service_path(self, host: Union[str, None] = None):
         if not self.ctx.disable_split_host:
             host = self.slugify(host)
-            host = '' if host == None else f'/{host}'
+            host = '' if host is None else f'/{host}'
         else:
             host = ''
         if not self.ctx.disable_split_project:
-            project = '' if self.ctx.project == None else f'/{self.ctx.project}'
+            project = '' if self.ctx.project is None else f'/{self.ctx.project}'
         else:
             project = ''
 
         if self.ctx.base_path[-1] == '/':
-            self.ctx.base_path = self.ctx.base_path[0:-1]
+            self.ctx.base_path = self.ctx.base_path[:-1]
 
         return f'{self.ctx.base_path}{project}{host}'
 
@@ -124,14 +126,14 @@ class Utils:
     # --------------------------------------------------------------------------
 
     def run_command_endless(self, command_list=[]) -> None:
-        sub_p: subprocess.Popen = None
+        sub_p: Union[Popen[bytes], None] = None
         is_running = True
         try:
             index_to_check = 0
             index_to_check = 1 if command_list[index_to_check] == 'sudo' else index_to_check
 
             if self.is_tool(command_list[index_to_check]):
-                sub_p = subprocess.Popen(command_list)
+                sub_p = Popen(command_list)
                 while is_running:
                     time.sleep(600)
             else:
@@ -143,24 +145,27 @@ class Utils:
             logging.log(logging.CRITICAL, e, exc_info=True)
         is_running = False
         try:
-            if sub_p != None:
+            if sub_p is not None:
                 sub_p.terminate()
-        except:
+        except Exception:
             pass
         try:
-            if sub_p != None:
-                while sub_p.poll() == None:
+            if sub_p is not None:
+                while sub_p.poll() is None:
                     time.sleep(1)
-        except:
+        except Exception:
             pass
 
-    def run_command(self, command_list: List[str] = [], input: str = None, inner_loop: bool = False) -> Tuple[str, str]:
-        sub_p = None
-        sub_std: Union[bytes, str] = None
-        sub_err: Union[bytes, str] = None
+    def run_command(self, command_list: List[str] = [], input: Union[str, None] = None,
+                    inner_loop: bool = False) -> Tuple[Union[str, None], Union[str, None]]:
+        sub_std_res: Union[str, None] = None
+        sub_err_res: Union[str, None] = None
 
         if not self.ctx.print_only_mode:
             try:
+                sub_std: Union[bytes, str, None] = None
+                sub_err: Union[bytes, str, None] = None
+
                 index_to_check = 0
                 index_to_check = 1 if command_list[index_to_check] == 'sudo' else index_to_check
 
@@ -180,8 +185,8 @@ class Utils:
                 ]
 
                 if self.is_tool(command_list[index_to_check]):
-                    if input == None:
-                        with subprocess.Popen(command_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE) as sub_p:
+                    if input is None:
+                        with Popen(command_list, stdout=PIPE, stderr=PIPE) as sub_p:
                             time.sleep(time_check_running)
                             if sub_p.poll() is None:
                                 with PixelSpinner('Processing... ') as spinner:
@@ -194,10 +199,11 @@ class Utils:
                                         time.sleep(time_check_running)
                             (sub_std, sub_err) = sub_p.communicate()
                     else:
-                        with subprocess.Popen(command_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE) as sub_p:
-                            # (sub_std, sub_err) = sub_p.communicate(input=input.encode())
-                            sub_p.stdin.write(input.encode())
-                            sub_p.stdin.close()
+                        with Popen(command_list, stdout=PIPE, stderr=PIPE, stdin=PIPE) as sub_p:
+                            if sub_p.stdin is not None and input is not None:
+                                # (sub_std, sub_err) = sub_p.communicate(input=input.encode())
+                                sub_p.stdin.write(input.encode())
+                                sub_p.stdin.close()
                             time.sleep(time_check_running)
                             if sub_p.poll() is None:
                                 with PixelSpinner('Processing... ') as spinner:
@@ -209,27 +215,28 @@ class Utils:
                                         init_count += 1
                                         time.sleep(time_check_running)
 
-                            sub_std = sub_p.stdout.read()
-                            sub_err = sub_p.stderr.read()
+                            if sub_p.stdout is not None:
+                                sub_std = sub_p.stdout.read()
+                            if sub_p.stderr is not None:
+                                sub_err = sub_p.stderr.read()
                 else:
                     logging.log(logging.ERROR, f'the command "{command_list[index_to_check]}", did not exist')
                     sub_err = b"MISSING_COMMAND"
-            # termination with Ctrl+C
+
+                if sub_std is not None and type(sub_std) is bytes:
+                    sub_std_res = sub_std.decode()
+                if sub_err is not None and type(sub_err) is bytes and len(sub_err) > 0:
+                    sub_err_res = sub_err.decode()
+                    logging.log(logging.ERROR, sub_err)
+
             except KeyboardInterrupt as k:
-                if sub_p != None and type(sub_p) == subprocess.Popen:
-                    sub_p.kill()
                 logging.log(logging.WARNING, f'process interupted! ({k})')
                 if inner_loop:
                     raise KeyboardInterrupt
             except Exception as e:
                 logging.log(logging.CRITICAL, e, exc_info=True)
 
-            if sub_std is not None:
-                sub_std = sub_std.decode()
-            if sub_err is not None and len(sub_err) > 0:
-                sub_err = sub_err.decode()
-                logging.log(logging.ERROR, sub_err)
-            return (sub_std, sub_err)
+        return (sub_std_res, sub_err_res)
 
     def is_tool(self, name: str) -> bool:
         '''
@@ -237,12 +244,12 @@ class Utils:
         '''
         return which(name) is not None
 
-    def run_command_output_loop(self, msg: str, cmds: List[List[str]] = [], output: bool = True) -> str:
+    def run_command_output_loop(self, msg: str, cmds: List[List[str]] = [], output: bool = True) -> Union[str, None]:
         '''
             run command from list in a loop, and also optional pipe them into each other
             default exec function is "run_command" with different
         '''
-        cmd_result = None
+        cmd_result: Union[str, None] = None
         try:
             log_runBanner(msg)
             if len(cmds) <= 1:
@@ -277,19 +284,19 @@ class Utils:
     #
     # --------------------------------------------------------------------------
 
-    def group(self, flat, size):
+    def group(self, flat: List[Any], size: int) -> List[Any]:
         '''
             group list a flat list into a matrix of "size"
         '''
         return [flat[i:i+size] for i in range(0, len(flat), size)]
 
-    def normalize_caseless(self, text):
+    def normalize_caseless(self, text: str) -> str:
         '''
             lowercase a string, for any unicode
         '''
         return unicodedata.normalize('NFKD', text.casefold())
 
-    def slugify(self, value, allow_unicode=False):
+    def slugify(self, value: Union[str, None], allow_unicode: bool = False) -> Union[str, None]:
         '''
             https://github.com/django/django/blob/main/django/utils/text.py
         '''
@@ -307,39 +314,40 @@ class Utils:
     #
     # --------------------------------------------------------------------------
 
-    def in_sudo_mode(self):
+    def in_sudo_mode(self) -> None:
         '''
             If the user doesn't run the program with super user privileges, don't allow them to continue.
         '''
-        if not 'SUDO_UID' in os.environ.keys():
+        if 'SUDO_UID' not in os.environ.keys():
             logging.log(logging.ERROR, 'Try running this program with sudo.')
             sys.exit(1)
 
-    def prompt_sudo(self):
+    def prompt_sudo(self) -> int:
         try:
             if os.geteuid() != 0:
                 msg = "hay [sudo] password for %u: "
-                return subprocess.check_call(f"sudo -v -p '{msg}'", shell=True)
-        except:
+                return check_call(f"sudo -v -p '{msg}'", shell=True)
+        except Exception:
             pass
         return -1
 
-    def get_ip_address(self):
+    def get_ip_address(self) -> Union[str, None]:
+        IP = None
         st = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
             st.connect(('10.255.255.255', 1))
             IP = st.getsockname()[0]
-        except:
+        except Exception:
             IP = '127.0.0.1'
         finally:
             st.close()
         return IP
 
-    def uri_validator(self, url: str):
+    def uri_validator(self, url: str) -> bool:
         try:
             result = urlparse(url)
             return all([result.scheme, result.netloc])
-        except:
+        except Exception:
             return False
 
     # --------------------------------------------------------------------------
@@ -348,7 +356,7 @@ class Utils:
     #
     # --------------------------------------------------------------------------
 
-    def progress(self, id: int, value: int, description: str = "Processing", maxval: int = 100):
+    def progress(self, id: int, value: int, description: str = "Processing", maxval: int = 100) -> None:
         try:
             # if self.ctx.progress.get(id) is None:
             #     self.ctx.progress[id] = tqdm(total=maxval, desc=description, colour="#000", leave=False)
@@ -394,7 +402,8 @@ class Utils:
     #
     # --------------------------------------------------------------------------
 
-    def define_option_list(self, options, default_options=[], options_append=False, default_split_by=';'):
+    def define_option_list(self, options: str, default_options: List[Any] = [],
+                           options_append: bool = False, default_split_by: str = ';') -> List[Any]:
         '''
             defines a list of option to use in a callable service
             to define how to create this list
@@ -404,16 +413,17 @@ class Utils:
                 - create it by combine default and params
         '''
         try:
+            result: List[Any] = []
             # add options from params
-            if options != None and not options_append:
-                options = options.split(default_split_by)
+            if options is not None and not options_append:
+                result = options.split(default_split_by)
             # add options from params to existing options
-            elif options != None and options_append:
-                options = default_options + options.split(default_split_by)
+            elif options is not None and options_append:
+                result = default_options + options.split(default_split_by)
             # use existing options
             else:
-                options = default_options
-            return options
+                result = default_options
+            return result
         except Exception as e:
             logging.log(logging.CRITICAL, e, exc_info=True)
         return []

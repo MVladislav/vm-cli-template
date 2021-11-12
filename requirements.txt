@@ -8,6 +8,7 @@ progressbar
 
 maxminddb
 requests
+types-requests
 
 # beautifulsoup4
 # bs4

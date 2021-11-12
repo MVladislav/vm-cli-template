@@ -1,42 +1,6 @@
-import logging
-import sys
 from pathlib import Path
 
-# ------------------------------------------------------------------------------
-#
-#
-#
-# ------------------------------------------------------------------------------
-
-try:
-    from starlette.config import Config
-except ImportError:
-    source_to_install = 'starlette'
-    logging.log(logging.CRITICAL, f'Failed to Import {source_to_install}')
-    try:
-        # choice = input(f'[*] Attempt to Auto-istall {source_to_install}? [y/N]')
-        choice = 'y'
-    except KeyboardInterrupt:
-        logging.log(logging.INFO, 'User Interrupted Choice')
-        sys.exit(1)
-    if choice.strip().lower()[0] == 'y':
-        logging.log(logging.INFO, f'Attempting to Install {source_to_install}')
-        sys.stdout.flush()
-        try:
-            import subprocess
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", source_to_install])
-            from starlette.config import Config
-            logging.log(logging.INFO, '[DONE]')
-        except Exception:
-            logging.log(logging.CRITICAL, '[FAIL]')
-            sys.exit(1)
-    elif choice.strip().lower()[0] == 'n':
-        logging.log(logging.INFO, 'User Denied Auto-install')
-        sys.exit(1)
-    else:
-        logging.log(logging.WARNING, 'Invalid Decision')
-        sys.exit(1)
-
+from starlette.config import Config
 
 # ------------------------------------------------------------------------------
 #

@@ -34,7 +34,8 @@ def cli(ctx: Context):
 @cli.command()
 @click.option('-d', '--host', type=str, help='host to scan for', required=True)
 @click.option('-p', '--port', type=int, help='define port [443]', default=443)
-@click.option('-o', '--options', type=str, help=f'options to scan with (seperated by "{default_split_by}") [None]', default=None)
+@click.option('-o', '--options', type=str,
+              help=f'options to scan with (seperated by "{default_split_by}") [None]', default=None)
 @click.option('-oa', '--options_append', is_flag=True, help='append new options to existing option list')
 @pass_context
 def test(ctx: Context, host, port, options, options_append):
@@ -43,9 +44,11 @@ def test(ctx: Context, host, port, options, options_append):
     '''
     service: TestService = ctx.service
     try:
-        logging.log(logging.INFO, f"this is a service call")
+        logging.log(logging.INFO, "this is a service call")
 
-        options = service.utils.define_option_list(options=options, options_append=options_append, default_split_by=default_split_by)
+        options = service.utils.define_option_list(
+            options=options, options_append=options_append,
+            default_split_by=default_split_by)
 
     except KeyboardInterrupt as k:
         logging.log(logging.DEBUG, f"process interupted! ({k})")
