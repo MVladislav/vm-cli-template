@@ -104,7 +104,7 @@ class Utils:
         return path
 
     def create_service_path(self, host: Union[str, None] = None):
-        if not self.ctx.disable_split_host:
+        if not self.ctx.disable_split_host and host is not None:
             host = self.slugify(host)
             host = '' if host is None else f'/{host}'
         else:
@@ -343,12 +343,16 @@ class Utils:
             st.close()
         return IP
 
-    def uri_validator(self, url: str) -> bool:
+    def uri_validator(self, url: str) -> Union[str, None]:
         try:
+            if url.endswith('/'):
+                url = url[:-1]
             result = urlparse(url)
-            return all([result.scheme, result.netloc])
+            if all([result.scheme, result.netloc]):
+                return url
         except Exception:
-            return False
+            pass
+        return None
 
     # --------------------------------------------------------------------------
     #

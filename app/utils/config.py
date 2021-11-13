@@ -35,7 +35,7 @@ DEBUG_RELOAD: bool = True if DEBUG else False
 # ------------------------------------------------------------------------------
 
 
-BASE_PATH: str = config('VM_BASE_PATH', default=f'{Path.home()}/Documents/{PROJECT_NAME}')
+BASE_PATH: str = config('VM_BASE_PATH', default=f'{Path.home()}/Documents')
 
 # ------------------------------------------------------------------------------
 #

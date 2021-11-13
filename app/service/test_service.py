@@ -24,7 +24,7 @@ class TestService:
             self.utils: Utils = ctx.utils
             logging.log(logging.DEBUG, 'test-service is initiated')
         else:
-            logging.log(logging.ERROR, "context is not set")
+            logging.log(logging.ERROR, "context or utils are not set")
             sys.exit(1)
 
     # --------------------------------------------------------------------------

@@ -22,7 +22,11 @@ def cli(ctx: Context):
     '''
         This a command
     '''
-    ctx.service = TestService(ctx)
+    if ctx.utils is not None:
+        ctx.service = TestService(ctx)
+    else:
+        logging.log(logging.ERROR, f'utils are not set')
+        sys.exit(1)
 
 # ------------------------------------------------------------------------------
 #
