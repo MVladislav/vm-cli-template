@@ -27,22 +27,38 @@ an template to copy to implement python with `setup.py` and `click` for **cli**.
 change to your project name:
 
 ```sh
-sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/docker-build.yml
-sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/python-dev.yml
-sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup-dev.sh
-sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup.sh
-sed -i "s|vm_cli|<PROJECT_NAME>|g" .env_project
-sed -i "s|vm_cli|<PROJECT_NAME>|g" docker-compose.yaml
-sed -i "s|vm_cli|<PROJECT_NAME>|g" Dockerfile
-sed -i "s|vm_cli|<PROJECT_NAME>|g" pyproject.toml
-sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.cfg
-sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.py
+sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/docker-build.yml 2>/dev/null
+sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/python-dev.yml 2>/dev/null
+sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup-dev.sh 2>/dev/null
+sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup.sh 2>/dev/null
+sed -i "s|vm_cli|<PROJECT_NAME>|g" app/utils/config.py 2>/dev/null
+sed -i "s|vm_cli|<PROJECT_NAME>|g" .env_project 2>/dev/null
+sed -i "s|vm_cli|<PROJECT_NAME>|g" docker-compose.yaml 2>/dev/null
+sed -i "s|vm_cli|<PROJECT_NAME>|g" Dockerfile 2>/dev/null
+sed -i "s|vm_cli|<PROJECT_NAME>|g" pyproject.toml 2>/dev/null
+sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.cfg 2>/dev/null
+sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.py 2>/dev/null
+```
+
+update version:
+
+```sh
+sed -i "s|0.0.1|<NEW_VERSION>|g" .github/workflows/docker-build.yml 2>/dev/null
+sed -i "s|0.0.1|<NEW_VERSION>|g" .github/workflows/python-dev.yml 2>/dev/null
+sed -i "s|0.0.1|<NEW_VERSION>|g" app/utils/config.py 2>/dev/null
+sed -i "s|0.0.1|<NEW_VERSION>|g" .env_project 2>/dev/null
+sed -i "s|0.0.1|<NEW_VERSION>|g" docker-compose.yaml 2>/dev/null
+sed -i "s|0.0.1|<NEW_VERSION>|g" Dockerfile 2>/dev/null
+sed -i "s|0.0.1|<NEW_VERSION>|g" pyproject.toml 2>/dev/null
+sed -i "s|0.0.1|<NEW_VERSION>|g" setup.cfg 2>/dev/null
+sed -i "s|0.0.1|<NEW_VERSION>|g" setup.py 2>/dev/null
 ```
 
 ## install
 
 ```sh
-$pip3 install starlette && pip3 install .
+$python3 -m pip install .
+# $pip3 install .
 ```
 
 ### DEBUG `(PREFERRED)`
@@ -51,7 +67,7 @@ $pip3 install starlette && pip3 install .
 $mkdir -p "$HOME/.vm_cli"
 $python3 -m venv "$HOME/.vm_cli/venv"
 $source "$HOME/.vm_cli/venv/bin/activate"
-$pip3 install -v --editable .
+$python3 -m pip install .
 ```
 
 ### docker
