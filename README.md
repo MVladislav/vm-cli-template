@@ -10,6 +10,7 @@
 ---
 
 - [Python CLI template](#python-cli-template)
+  - [on clone this project](#on-clone-this-project)
   - [install](#install)
     - [DEBUG `(PREFERRED)`](#debug-preferred)
     - [docker](#docker)
@@ -20,6 +21,23 @@
 ---
 
 an template to copy to implement python with `setup.py` and `click` for **cli**.
+
+## on clone this project
+
+change to your project name:
+
+```sh
+sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/docker-build.yml
+sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/python-dev.yml
+sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup-dev.sh
+sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup.sh
+sed -i "s|vm_cli|<PROJECT_NAME>|g" .env_project
+sed -i "s|vm_cli|<PROJECT_NAME>|g" docker-compose.yaml
+sed -i "s|vm_cli|<PROJECT_NAME>|g" Dockerfile
+sed -i "s|vm_cli|<PROJECT_NAME>|g" pyproject.toml
+sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.cfg
+sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.py
+```
 
 ## install
 

@@ -48,44 +48,12 @@ export PATH="$HOME/gems/bin:$PATH"
 echo '--> setup:: path:: make'
 export PREFIX="$HOME/.local"
 
-# read -p "Do you wish to install dependencies? [y/N] " yn
-# case $yn in
-# [Yy]*)
-#   echo ""
-#   break
-#   ;;
-# [Nn]*) exit ;;
-# *) echo "Please answer yes or no." ;;
-# esac
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo ''
-echo 'init:: create base folder struct'
-
-vm_project_name=vm_cli
-
-vm_path="$HOME/.$vm_project_name"
-vm_path_git="$vm_path/git"
-vm_path_source="$vm_path/deb"
-vm_prefix="$HOME/.local"
-vm_run="$HOME/.local/bin"
-mkdir -p "$vm_path"
-mkdir -p "$vm_path_git"
-mkdir -p "$vm_path_source"
-mkdir -p "$vm_prefix"
-mkdir -p "$vm_run"
-
-echo ''
-echo "init:: venv"
-python3 -m venv "$vm_path/venv"
-source "$vm_path/venv/bin/activate"
-
-echo ''
-echo 'inst:: dependencies...'
+# FUNCTIONS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# HELPER
+# cd into folder and clone + cd into cloned
 clone_or_pull_and_cd() {
-  git_link=$1
+  local git_link=$1
   repo_name=$(basename "$git_link" .git)
   echo ''
   echo "inst:: git:: $repo_name"
@@ -98,6 +66,110 @@ clone_or_pull_and_cd() {
   cd "$repo_name"
 }
 
+# cd into folder, create folder for curl name and curl
+curl_and_cd() {
+  local curl_link=$1
+  local repo_name=42
+  echo ''
+  echo "inst:: curl:: $repo_name"
+  cd "$vm_path_git"
+  mkdir -p "$repo_name"
+  cd "$repo_name"
+  curl "$curl_link" >"$repo_name"
+}
+
+# check if command always installed like 'which'
+check_if_command_installed() {
+  if ! command -v "$1" &>/dev/null; then
+    echo 1
+  else
+    echo "--> inst:: ...:: $1 is always installed"
+  fi
+}
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo ''
+echo 'init:: create base folder struct'
+vm_path=$HOME/.vm_cli
+vm_path_git=$vm_path/git
+vm_path_source=$vm_path/deb
+vm_prefix=$HOME/.local
+vm_run=$HOME/.local/bin
+mkdir -p "$vm_path"
+mkdir -p "$vm_path_git"
+mkdir -p "$vm_path_source"
+mkdir -p "$vm_prefix"
+mkdir -p "$vm_run"
+
+echo ''
+echo "init:: venv"
+export PYTHONPATH=
+python3 -m venv "$vm_path/venv"
+source "$vm_path/venv/bin/activate"
+# curl https://bootstrap.pypa.io/get-pip.py -o "$vm_path_git/get-pip.py"
+# python3 "$vm_path_git/get-pip.py"
+python3 -m pip install --upgrade pip
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo ''
+echo 'inst:: dependencies...'
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo ''
+echo 'inst:: pip3:: services'
+pips_to_install=(
+  pip
+)
+for pip_to_install in "${pips_to_install[@]}"; do
+  echo "--> inst:: pip3:: ${pip_to_install}"
+  python3 -m pip install "$pip_to_install"
+done
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo ''
+echo 'inst:: gem:: services'
+gems_to_install=(
+  bundler
+)
+for gem_to_install in "${gems_to_install[@]}"; do
+  echo "--> inst:: gem:: ${gem_to_install}"
+  gem install "$gem_to_install"
+done
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo ''
+echo 'inst:: go:: services'
+gos_to_install=(
+  # ...
+)
+for go_to_install in "${gos_to_install[@]}"; do
+  echo "--> inst:: go:: ${go_to_install}"
+  go install "${go_to_install}@latest"
+done
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo ''
+echo 'inst:: npm:: services'
+npms_to_install=(
+  # ...
+)
+for npm_to_install in "${npms_to_install[@]}"; do
+  echo "--> inst:: npm:: ${npm_to_install}"
+  npm install -g "$npm_to_install"
+done
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ...
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# set user own rules
+chmod 750 "$vm_path" -R 2>/dev/null
+chmod 750 "$vm_prefix" -R 2>/dev/null
+
+echo ''
+echo '#########################################################################'
+echo ''
 
 exit 0

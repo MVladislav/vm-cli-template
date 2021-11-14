@@ -28,19 +28,19 @@ ENV IS_VENV=false
 RUN python3 -m pip install --upgrade pip
 
 # SET work dir
-WORKDIR /vm-cli/
+WORKDIR /vm_cli/
 
 # GET all file
 COPY ./ ./
 
 # SET project arguments
-ARG PROJECT_NAME=VM-CLI
+ARG PROJECT_NAME=vm_cli
 ARG ENV_MODE=KONS
 ARG LOGGING_LEVEL=DEBUG
 ARG LOGGING_VERBOSE=3
 
-RUN mkdir -p /vm-cli/scans/
-ARG VM_BASE_PATH="/vm-cli/scans/"
+RUN mkdir -p /vm_cli/scans/
+ARG VM_BASE_PATH="/vm_cli/scans/"
 
 # ------------------------------------------------------------------------------
 
