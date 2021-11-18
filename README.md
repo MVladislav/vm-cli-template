@@ -95,8 +95,11 @@ $pre-commit install
 ### manual test run
 
 ```sh
-$mypy app
-$flake8 app
-$pytest --cov=tests
-$tox
+$mkdir logs
+$mypy app | tee logs/mypy.log
+$python3 -m pylint --rcfile=setup.cfg `find app -regextype egrep -regex '(.*.py)$'` | tee logs/pylint.log
+$flake8 app --count --select=E9,F63,F7,F82 --show-source --statistics | tee logs/flake8_1.log
+$flake8 app --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics | tee logs/flake8_2.log
+$python3 -m pytest --cov=tests | tee logs/pytest.log
+$tox | tee logs/tox.log
 ```
