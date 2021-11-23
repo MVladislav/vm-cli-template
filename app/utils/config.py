@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Union
 
 from starlette.config import Config
@@ -36,7 +35,7 @@ DEBUG_RELOAD: bool = True if DEBUG else False
 # ------------------------------------------------------------------------------
 
 
-BASE_PATH: str = config('VM_BASE_PATH', default=f'{Path.home()}/Documents')
+BASE_PATH: str = config('VM_BASE_PATH', default=f'.')
 
 # ------------------------------------------------------------------------------
 #
@@ -51,5 +50,7 @@ GEO_LITE_TAR_FILE_URL = f'https://download.maxmind.com/app/geoip_download' \
                         f'?edition_id=GeoLite2-City' \
                         f'&license_key={GEO_LICENSE_KEY}' \
                         f'&suffix=tar.gz'
+# TODO: add legacy
+# http://dev.maxmind.com/geoip/legacy/geolite/
 GEO_DB_FNAME = '/GeoLite2-City.mmdb'
 GEO_DB_ZIP_FNAME = '/GeoIP2LiteCity.tar.gz'

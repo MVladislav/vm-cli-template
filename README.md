@@ -11,6 +11,7 @@
 
 - [Python CLI template](#python-cli-template)
   - [on clone this project](#on-clone-this-project)
+    - [on update from this repo](#on-update-from-this-repo)
   - [install](#install)
     - [DEBUG `(PREFERRED)`](#debug-preferred)
     - [docker](#docker)
@@ -27,38 +28,60 @@ an template to copy to implement python with `setup.py` and `click` for **cli**.
 change to your project name:
 
 ```sh
-sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/docker-build.yml 2>/dev/null
-sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/python-dev.yml 2>/dev/null
-sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup-dev.sh 2>/dev/null
-sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup.sh 2>/dev/null
-sed -i "s|vm_cli|<PROJECT_NAME>|g" app/utils/config.py 2>/dev/null
-sed -i "s|vm_cli|<PROJECT_NAME>|g" .env_project 2>/dev/null
-sed -i "s|vm_cli|<PROJECT_NAME>|g" docker-compose.yaml 2>/dev/null
-sed -i "s|vm_cli|<PROJECT_NAME>|g" Dockerfile 2>/dev/null
-sed -i "s|vm_cli|<PROJECT_NAME>|g" pyproject.toml 2>/dev/null
-sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.cfg 2>/dev/null
-sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.py 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/docker-build.yml 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/python-dev.yml 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup-dev.sh 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup.sh 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" app/utils/config.py 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" .env_project 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" docker-compose.yaml 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" Dockerfile 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" pyproject.toml 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.cfg 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.py 2>/dev/null
 ```
 
 update version:
 
 ```sh
-sed -i "s|0.0.1|<NEW_VERSION>|g" .github/workflows/docker-build.yml 2>/dev/null
-sed -i "s|0.0.1|<NEW_VERSION>|g" .github/workflows/python-dev.yml 2>/dev/null
-sed -i "s|0.0.1|<NEW_VERSION>|g" app/utils/config.py 2>/dev/null
-sed -i "s|0.0.1|<NEW_VERSION>|g" .env_project 2>/dev/null
-sed -i "s|0.0.1|<NEW_VERSION>|g" docker-compose.yaml 2>/dev/null
-sed -i "s|0.0.1|<NEW_VERSION>|g" Dockerfile 2>/dev/null
-sed -i "s|0.0.1|<NEW_VERSION>|g" pyproject.toml 2>/dev/null
-sed -i "s|0.0.1|<NEW_VERSION>|g" setup.cfg 2>/dev/null
-sed -i "s|0.0.1|<NEW_VERSION>|g" setup.py 2>/dev/null
+$sed -i "s|0.0.1|<NEW_VERSION>|g" .github/workflows/docker-build.yml 2>/dev/null
+$sed -i "s|0.0.1|<NEW_VERSION>|g" .github/workflows/python-dev.yml 2>/dev/null
+$sed -i "s|0.0.1|<NEW_VERSION>|g" app/utils/config.py 2>/dev/null
+$sed -i "s|0.0.1|<NEW_VERSION>|g" .env_project 2>/dev/null
+$sed -i "s|0.0.1|<NEW_VERSION>|g" docker-compose.yaml 2>/dev/null
+$sed -i "s|0.0.1|<NEW_VERSION>|g" Dockerfile 2>/dev/null
+$sed -i "s|0.0.1|<NEW_VERSION>|g" pyproject.toml 2>/dev/null
+$sed -i "s|0.0.1|<NEW_VERSION>|g" setup.cfg 2>/dev/null
+$sed -i "s|0.0.1|<NEW_VERSION>|g" setup.py 2>/dev/null
+```
+
+### on update from this repo
+
+first commit your current work than copy main files
+
+```sh
+$export PATH_TO_VM_CLI=<TODO>
+$cp -r "$PATH_TO_VM_CLI/.vscode/" ./
+$cp -r "$PATH_TO_VM_CLI/app/main.py" ./app/
+$cp -r "$PATH_TO_VM_CLI/app/utils/" ./app/
+$cp -r "$PATH_TO_VM_CLI/.dockerignore" ./.dockerignore
+$cp -r "$PATH_TO_VM_CLI/.env_project" ./.env_project
+$cp -r "$PATH_TO_VM_CLI/.env_template" ./.env_template
+$cp -r "$PATH_TO_VM_CLI/.gitignore" ./.gitignore
+$cp -r "$PATH_TO_VM_CLI/.pre-commit-config.yaml" ./.pre-commit-config.yaml
+$cp -r "$PATH_TO_VM_CLI/LICENCE" ./LICENCE
+$cp -r "$PATH_TO_VM_CLI/SECURITY.md" ./SECURITY.md
+$cp -r "$PATH_TO_VM_CLI/pyproject.toml" ./pyproject.toml
+$cp -r "$PATH_TO_VM_CLI/requirements_dev.txt" ./requirements_dev.txt
+$cp -r "$PATH_TO_VM_CLI/setup.cfg" ./setup.cfg
+$cp -r "$PATH_TO_VM_CLI/setup.py" ./setup.py
+$cp -r "$PATH_TO_VM_CLI/tox.ini" ./tox.ini
 ```
 
 ## install
 
 ```sh
 $python3 -m pip install .
-# $pip3 install .
 ```
 
 ### DEBUG `(PREFERRED)`
