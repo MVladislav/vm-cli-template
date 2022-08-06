@@ -39,6 +39,18 @@ $sed -i "s|vm_cli|<PROJECT_NAME>|g" Dockerfile 2>/dev/null
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" pyproject.toml 2>/dev/null
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.cfg 2>/dev/null
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.py 2>/dev/null
+
+$mv app <PROJECT_NAME>
+$sed -i "s|app\b|<PROJECT_NAME>|g" .gitignore 2>/dev/null
+$sed -i "s|app\b|<PROJECT_NAME>|g" .dockerignore 2>/dev/null
+$sed -i "s|app\b|<PROJECT_NAME>|g" .pre-commit-config.yaml 2>/dev/null
+$sed -i "s|app\b|<PROJECT_NAME>|g" docker-compose.yaml 2>/dev/null
+$sed -i "s|app\b|<PROJECT_NAME>|g" pyproject.toml 2>/dev/null
+$sed -i "s|app\b|<PROJECT_NAME>|g" setup.cfg 2>/dev/null
+$sed -i "s|app\b|<PROJECT_NAME>|g" setup.py 2>/dev/null
+$sed -i "s|app\b|<PROJECT_NAME>|g" tox.ini 2>/dev/null
+$sed -i "s|app\b|<PROJECT_NAME>|g" .github/workflows/python-dev.yml 2>/dev/null
+$sed -i "s|app\b|<PROJECT_NAME>|g" <PROJECT_NAME>/main.py 2>/dev/null
 ```
 
 update version:
