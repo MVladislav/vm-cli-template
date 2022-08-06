@@ -2,13 +2,12 @@
 name = "vm_cli"
 version = "0.0.1"
 description = "vm_cli"
-authors = ["MVladislav <info@mvladislav.online>"]
-license = "GNU AGPLv3"
+authors = [
+  {name = "MVladislav"},
+  {email = "info@mvladislav.online"}
+]
+license = {file = "LICENSE"}
 readme = "README.md"
-python = "^36"
-homepage = "https://github.com/MVladislav"
-repository = "https://github.com/MVladislav/vm-recon"
-documentation = "https://github.com/MVladislav/vm-recon"
 
 keywords = ["python3", "pip3", "pyproject.toml"]
 
