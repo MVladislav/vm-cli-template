@@ -1,6 +1,12 @@
+black
+
+mypy
+isort
 flake8
+pylint
+
+autoflake
+
 tox
 pytest
 pytest-cov
-mypy
-pylint

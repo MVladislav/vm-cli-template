@@ -3,7 +3,13 @@
 set -e
 set -x
 
-rm -r logs/.mypy_cache logs/html_dir
-rm logs/format-imports.log logs/lint.log logs/test-cov-html.log logs/test.log
+rm -rf ./.mypy_cache
+rm -rf ./scripts/logs/.mypy_cache
+rm -rf ./scripts/logs/.tox
+rm -f ./scripts/logs/html_dir
+rm -f ./scripts/logs/format-imports.log
+rm -f ./scripts/logs/lint.log
+rm -f ./scripts/logs/test-cov-html.log
+rm -f ./scripts/logs/test.log
 
 exit 0

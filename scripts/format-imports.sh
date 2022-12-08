@@ -2,5 +2,5 @@
 set -x
 
 # Sort imports one per line, so autoflake can remove unused imports
-python3 -m isort --recursive --force-single-line-imports --apply vm_cli
+python3 -m isort --force-single-line-imports --src vm_cli .
 sh ./scripts/format.sh
