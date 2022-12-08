@@ -7,8 +7,7 @@ progress
 progressbar
 
 maxminddb
-requests
-types-requests
+httpx
 
 # beautifulsoup4
 # bs4
