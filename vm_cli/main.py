@@ -13,7 +13,6 @@ from .utils.utils import Context, Utils, pass_context
 #
 #
 # ------------------------------------------------------------------------------
-
 # Program Header
 # Basic user interface header
 print(
@@ -37,8 +36,6 @@ print()
 #
 #
 # ------------------------------------------------------------------------------
-
-
 class ComplexCLI(click.MultiCommand):
     def list_commands(self, ctx):
         rv = []
@@ -52,6 +49,7 @@ class ComplexCLI(click.MultiCommand):
         try:
             mod = __import__(f"vm_cli.commands.{name}", None, None, ["cli"])
             return mod.cli
+
         except ImportError as e:
             logging.log(logging.CRITICAL, e)
 
@@ -61,27 +59,79 @@ class ComplexCLI(click.MultiCommand):
 #
 #
 # ------------------------------------------------------------------------------
-
-CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"], ignore_unknown_options=True, auto_envvar_prefix="COMPLEX")
+CONTEXT_SETTINGS = dict(
+    help_option_names=["-h", "--help"],
+    ignore_unknown_options=True,
+    auto_envvar_prefix="COMPLEX",
+)
 
 
 @click.command(cls=ComplexCLI, context_settings=CONTEXT_SETTINGS)
 @click.version_option(VERSION)
-@click.option("-v", "--verbose", count=True, help=f"Enables verbose mode [{LOGGING_VERBOSE}]", default=LOGGING_VERBOSE)
+@click.option(
+    "-v",
+    "--verbose",
+    count=True,
+    help=f"Enables verbose mode [{LOGGING_VERBOSE}]",
+    default=LOGGING_VERBOSE,
+)
 @click.option(
     "-l",
     "--logging-level",
-    type=click.Choice(["CRITICAL", "ERROR", "WARNING", "SUCCESS", "NOTICE", "INFO", "VERBOSE", "DEBUG", "SPAM"]),
+    type=click.Choice(
+        [
+            "CRITICAL",
+            "ERROR",
+            "WARNING",
+            "SUCCESS",
+            "NOTICE",
+            "INFO",
+            "VERBOSE",
+            "DEBUG",
+            "SPAM",
+        ]
+    ),
     help=f"which log level to use [{LOGGING_LEVEL}]",
     default=LOGGING_LEVEL,
 )
-@click.option("--home", type=click.Path(writable=True), help=f"home path to save scannes [{BASE_PATH}]", default=BASE_PATH)
-@click.option("-p", "--project", type=str, help=f"project name to store result in [{PROJECT_NAME}]", default=PROJECT_NAME)
-@click.option("-dsp", "--disable-split-project", is_flag=True, help="disable splitting folder struct by project [false]")
-@click.option("-dsh", "--disable-split-host", is_flag=True, help="disable splitting folder struct by host [false]")
-@click.option("-pom", "--print-only-mode", is_flag=True, help="command will only printed and not run [false]")
+@click.option(
+    "--home",
+    type=click.Path(writable=True),
+    help=f"home path to save scannes [{BASE_PATH}]",
+    default=BASE_PATH,
+)
+@click.option(
+    "-p",
+    "--project",
+    type=str,
+    help=f"project name to store result in [{PROJECT_NAME}]",
+    default=PROJECT_NAME,
+)
+@click.option(
+    "-dsp",
+    "--disable-split-project",
+    is_flag=True,
+    help="disable splitting folder struct by project [false]",
+)
+@click.option(
+    "-dsh",
+    "--disable-split-host",
+    is_flag=True,
+    help="disable splitting folder struct by host [false]",
+)
+@click.option(
+    "-pom",
+    "--print-only-mode",
+    is_flag=True,
+    help="command will only printed and not run [false]",
+)
 @click.option("-s", "--sudo", is_flag=True, help="append sudo for command which need it [false]")
-@click.option("-t", "--terminal-read-mode", is_flag=True, help="print on subprocess stdout also direct to console [false]")
+@click.option(
+    "-t",
+    "--terminal-read-mode",
+    is_flag=True,
+    help="print on subprocess stdout also direct to console [false]",
+)
 @pass_context
 def cli(
     ctx: Context,

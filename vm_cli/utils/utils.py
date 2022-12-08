@@ -7,10 +7,11 @@ import sys
 import time
 import unicodedata
 from io import BufferedReader
+from optparse import Option
 from pathlib import Path
 from shutil import which
 from subprocess import PIPE, Popen, check_call
-from typing import IO, Any, Dict, List, Tuple, Union
+from typing import IO, Any, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
 
 import click
@@ -26,19 +27,16 @@ from .config import BASE_PATH, ENV_MODE, LOGGING_LEVEL, PROJECT_NAME
 from .defaultLogBanner import log_runBanner
 from .locater import Locator
 
+
 # ------------------------------------------------------------------------------
 #
 #
 #
 # ------------------------------------------------------------------------------
-
-
 class Context:
-
     progress: Dict[int, ProgressBar] = {}
 
     def __init__(self):
-
         logging.log(logging.DEBUG, "init context...")
 
         self.service: Any = None
@@ -70,7 +68,6 @@ pass_context = click.make_pass_decorator(Context, ensure=True)
 
 
 class Utils:
-
     runner_init_count = 1
     runner_time_check_running = 1
     runner_text_it_is_running = [
@@ -86,22 +83,32 @@ class Utils:
     #
     #
     # --------------------------------------------------------------------------
-
     def __init__(self, ctx: Context):
         self.update(ctx, is_init=True)
 
-    def update(self, ctx: Context, is_init: bold = False):
+    def update(self, ctx: Context, is_init: bool = False):
         self.ctx = ctx
-
         if not is_init and LOGGING_LEVEL == logging.getLevelName(logging.DEBUG):
             print()
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             logging.log(logging.DEBUG, f"LOGGING-LEVEL          : {bold(ctx.logging_level)}")
             logging.log(logging.DEBUG, f"LOGGING-VERBOSE        : {bold(ctx.logging_verbose)}")
-            logging.log(logging.DEBUG, f"DISABLED SPLIT PROJECT : {bold(self.ctx.disable_split_project)}")
-            logging.log(logging.DEBUG, f"DISABLED SPLIT HOST    : {bold(self.ctx.disable_split_host)}")
-            logging.log(logging.DEBUG, f"PRINT ONLY MODE        : {bold(self.ctx.print_only_mode)}")
-            logging.log(logging.DEBUG, f'PROJECT-PATH           : {bold(self.create_service_path(None))}{bold("/")}')
+            logging.log(
+                logging.DEBUG,
+                f"DISABLED SPLIT PROJECT : {bold(self.ctx.disable_split_project)}",
+            )
+            logging.log(
+                logging.DEBUG,
+                f"DISABLED SPLIT HOST    : {bold(self.ctx.disable_split_host)}",
+            )
+            logging.log(
+                logging.DEBUG,
+                f"PRINT ONLY MODE        : {bold(self.ctx.print_only_mode)}",
+            )
+            logging.log(
+                logging.DEBUG,
+                f'PROJECT-PATH           : {bold(self.create_service_path(None))}{bold("/")}',
+            )
             logging.log(logging.DEBUG, f"ENV-MODE               : {bold(ENV_MODE)}")
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             print()
@@ -111,7 +118,6 @@ class Utils:
     # path | folder | file - helper
     #
     # --------------------------------------------------------------------------
-
     def create_folder(self, path: str) -> None:
         """
         create a folder under giving path
@@ -125,7 +131,11 @@ class Utils:
         return str(Path.home())
 
     def create_service_folder(
-        self, name: Union[str, None] = None, host: Union[str, None] = None, split_host=None, split_project=None
+        self,
+        name: Union[str, None] = None,
+        host: Union[str, None] = None,
+        split_host=None,
+        split_project=None,
     ) -> str:
         """
         creates a folder with name optional host under base path
@@ -163,7 +173,6 @@ class Utils:
     # command exec - helper
     #
     # --------------------------------------------------------------------------
-
     def run_command_endless(self, command_list=[]) -> None:
         sub_p: Union[Popen[bytes], None] = None
         is_running = True
@@ -183,7 +192,10 @@ class Utils:
                     while is_running:
                         time.sleep(600)
             else:
-                logging.log(logging.ERROR, f'the command "{command_list[index_to_check]}", did not exist')
+                logging.log(
+                    logging.ERROR,
+                    f'the command "{command_list[index_to_check]}", did not exist',
+                )
         except (SystemExit, KeyboardInterrupt) as k:
             logging.log(logging.WARNING, f"process interupted! ({k})")
         except Exception as e:
@@ -227,15 +239,22 @@ class Utils:
                         # , start_new_session=True
                         with Popen(command_list, stdout=PIPE, stderr=PIPE) as sub_p:
                             sub_std, sub_err, is_interrupted = self.subprocess_handler(
-                                sub_p=sub_p, input_value=input_value, command=command_list[index_to_check]
+                                sub_p=sub_p,
+                                input_value=input_value,
+                                command=command_list[index_to_check],
                             )
                     else:
                         with Popen(command_list, stdout=PIPE, stderr=PIPE, stdin=PIPE) as sub_p:
                             sub_std, sub_err, is_interrupted = self.subprocess_handler(
-                                sub_p=sub_p, input_value=input_value, command=command_list[index_to_check]
+                                sub_p=sub_p,
+                                input_value=input_value,
+                                command=command_list[index_to_check],
                             )
                 else:
-                    logging.log(logging.ERROR, f'the command "{command_list[index_to_check]}", did not exist')
+                    logging.log(
+                        logging.ERROR,
+                        f'the command "{command_list[index_to_check]}", did not exist',
+                    )
                     sub_err = b"MISSING_COMMAND"
 
                 if sub_std is not None and isinstance(sub_std, bytes):
@@ -243,7 +262,6 @@ class Utils:
                 if sub_err is not None and isinstance(sub_err, bytes) and len(sub_err) > 0:
                     sub_err_res = sub_err.decode()
                     logging.log(logging.ERROR, sub_err.split(b"\n"))
-
             except KeyboardInterrupt as k:
                 logging.log(logging.WARNING, f"process interupted! ({k})")
                 is_interrupted = True
@@ -252,7 +270,10 @@ class Utils:
         return (sub_std_res, sub_err_res, is_interrupted)
 
     def subprocess_handler(
-        self, sub_p: Popen[Any], input_value: Union[str, None] = None, command: Union[str, None] = None
+        self,
+        sub_p: Popen[Any],
+        input_value: Union[str, None] = None,
+        command: Union[str, None] = None,
     ) -> Tuple[Union[bytes, None], Union[bytes, None], bool]:
         sub_std: Union[bytes, None] = None
         sub_err: Union[bytes, None] = None
@@ -368,12 +389,11 @@ class Utils:
     #
     #
     # --------------------------------------------------------------------------
-
     def group(self, flat: List[Any], size: int) -> List[Any]:
         """
         group list a flat list into a matrix of "size"
         """
-        return [flat[i : i + size] for i in range(0, len(flat), size)]
+        return [flat[i: i + size] for i in range(0, len(flat), size)]
 
     def normalize_caseless(self, text: str) -> str:
         """
@@ -398,7 +418,6 @@ class Utils:
     #
     #
     # --------------------------------------------------------------------------
-
     def in_sudo_mode(self) -> None:
         """
         If the user doesn't run the program with super user privileges, don't allow them to continue.
@@ -454,7 +473,6 @@ class Utils:
     #
     #
     # --------------------------------------------------------------------------
-
     def progress(self, id: int, value: int, description: str = "Processing", maxval: int = 100) -> None:
         try:
             # if self.ctx.progress.get(id) is None:
@@ -480,10 +498,11 @@ class Utils:
                     ],
                     maxval=maxval,
                 ).start()
-            bar_p: ProgressBar = self.ctx.progress.get(id)
-            bar_p.update(value=value)
-            if value >= maxval:
-                print()
+            bar_p: Optional[ProgressBar] = self.ctx.progress.get(id)
+            if bar_p is not None:
+                bar_p.update(value=value)
+                if value >= maxval:
+                    print()
         except Exception as e:
             logging.log(logging.CRITICAL, e, exc_info=True)
 
@@ -506,15 +525,17 @@ class Utils:
     #             return NmapParser.parse(nmap_proc.stdout)
     #     except Exception as e:
     #         logging.log(logging.CRITICAL, e, exc_info=True)
-
     # --------------------------------------------------------------------------
     #
     #
     #
     # --------------------------------------------------------------------------
-
     def define_option_list(
-        self, options: str, default_options: List[Any] = [], options_append: bool = False, default_split_by: str = ","
+        self,
+        options: str,
+        default_options: List[Any] = [],
+        options_append: bool = False,
+        default_split_by: str = ","
     ) -> List[Any]:
         """
         defines a list of option to use in a callable service
@@ -536,6 +557,7 @@ class Utils:
             else:
                 result = default_options
             return result
+
         except Exception as e:
             logging.log(logging.CRITICAL, e, exc_info=True)
         return []
