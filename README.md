@@ -32,7 +32,7 @@ $sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/docker-build.yml 2>/dev/nu
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" .github/workflows/python-dev.yml 2>/dev/null
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup-dev.sh 2>/dev/null
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" scripts/setup.sh 2>/dev/null
-$sed -i "s|vm_cli|<PROJECT_NAME>|g" app/utils/config.py 2>/dev/null
+$sed -i "s|vm_cli|<PROJECT_NAME>|g" vm_cli/utils/config.py 2>/dev/null
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" .env_project 2>/dev/null
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" docker-compose.yaml 2>/dev/null
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" Dockerfile 2>/dev/null
@@ -40,17 +40,17 @@ $sed -i "s|vm_cli|<PROJECT_NAME>|g" pyproject.toml 2>/dev/null
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.cfg 2>/dev/null
 $sed -i "s|vm_cli|<PROJECT_NAME>|g" setup.py 2>/dev/null
 
-$mv app <PROJECT_NAME>
-$sed -i "s|app\b|<PROJECT_NAME>|g" .gitignore 2>/dev/null
-$sed -i "s|app\b|<PROJECT_NAME>|g" .dockerignore 2>/dev/null
-$sed -i "s|app\b|<PROJECT_NAME>|g" .pre-commit-config.yaml 2>/dev/null
-$sed -i "s|app\b|<PROJECT_NAME>|g" docker-compose.yaml 2>/dev/null
-$sed -i "s|app\b|<PROJECT_NAME>|g" pyproject.toml 2>/dev/null
-$sed -i "s|app\b|<PROJECT_NAME>|g" setup.cfg 2>/dev/null
-$sed -i "s|app\b|<PROJECT_NAME>|g" setup.py 2>/dev/null
-$sed -i "s|app\b|<PROJECT_NAME>|g" tox.ini 2>/dev/null
-$sed -i "s|app\b|<PROJECT_NAME>|g" .github/workflows/python-dev.yml 2>/dev/null
-$sed -i "s|app\b|<PROJECT_NAME>|g" <PROJECT_NAME>/main.py 2>/dev/null
+$mv vm_cli <PROJECT_NAME>
+$sed -i "s|vm_cli\b|<PROJECT_NAME>|g" .gitignore 2>/dev/null
+$sed -i "s|vm_cli\b|<PROJECT_NAME>|g" .dockerignore 2>/dev/null
+$sed -i "s|vm_cli\b|<PROJECT_NAME>|g" .pre-commit-config.yaml 2>/dev/null
+$sed -i "s|vm_cli\b|<PROJECT_NAME>|g" docker-compose.yaml 2>/dev/null
+$sed -i "s|vm_cli\b|<PROJECT_NAME>|g" pyproject.toml 2>/dev/null
+$sed -i "s|vm_cli\b|<PROJECT_NAME>|g" setup.cfg 2>/dev/null
+$sed -i "s|vm_cli\b|<PROJECT_NAME>|g" setup.py 2>/dev/null
+$sed -i "s|vm_cli\b|<PROJECT_NAME>|g" tox.ini 2>/dev/null
+$sed -i "s|vm_cli\b|<PROJECT_NAME>|g" .github/workflows/python-dev.yml 2>/dev/null
+$sed -i "s|vm_cli\b|<PROJECT_NAME>|g" <PROJECT_NAME>/main.py 2>/dev/null
 ```
 
 update version:
@@ -74,8 +74,8 @@ first commit your current work than copy main files
 ```sh
 $export PATH_TO_VM_CLI=<TODO>
 $cp -r "$PATH_TO_VM_CLI/.vscode/" ./
-$cp -r "$PATH_TO_VM_CLI/app/main.py" ./app/
-$cp -r "$PATH_TO_VM_CLI/app/utils/" ./app/
+$cp -r "$PATH_TO_VM_CLI/vm_cli/main.py" ./vm_cli/
+$cp -r "$PATH_TO_VM_CLI/vm_cli/utils/" ./vm_cli/
 $cp -r "$PATH_TO_VM_CLI/.dockerignore" ./.dockerignore
 $cp -r "$PATH_TO_VM_CLI/.env_project" ./.env_project
 $cp -r "$PATH_TO_VM_CLI/.env_template" ./.env_template

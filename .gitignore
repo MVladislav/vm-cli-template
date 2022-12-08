@@ -6,8 +6,8 @@
 !.github/**
 !.vscode/
 !.vscode/**
-!app/
-!app/**
+!vm_cli/
+!vm_cli/**
 !scripts/
 !scripts/**
 !tests/
