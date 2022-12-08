@@ -4,6 +4,7 @@ from typing import Union
 
 import coloredlogs
 import verboselogs
+from config import LOGGING_LEVEL, LOGGING_VERBOSE
 
 
 class LoggingMsgType(Enum):
@@ -32,7 +33,7 @@ class LogHelper:
     #
     #
     # --------------------------------------------------------------------------
-    def __init__(self, logging_verbose: int = 2, logging_level: str = "DEBUG"):
+    def __init__(self, logging_verbose: int = LOGGING_VERBOSE, logging_level: str = LOGGING_LEVEL):
         # configure logger for requested verbosity
         if logging_verbose >= 4:
             log_format = "[%(asctime)s,%(msecs)03d] %(name)s[%(process)d] \
