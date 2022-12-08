@@ -13,6 +13,7 @@
 !tests/
 !tests/**
 !logs/
+!tests-start.sh
 
 !.dockerignore
 !.env_project

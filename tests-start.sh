@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -e
 
 echo ''
 printf "    __  ____    ____          ___      __ \n\
@@ -11,7 +12,15 @@ echo '****************************************************************'
 echo '* Copyright of MVladislav, 2021                                *'
 echo '* https://mvladislav.online                                    *'
 echo '* https://github.com/MVladislav                                *'
+echo '* TESTING                                                      *'
 echo '****************************************************************'
 echo ''
+
+echo 'install dev dependencies...'
+python3 -m pip install -r requirements_dev.txt
+
+echo 'run tests...'
+bash ./scripts/format-imports.sh | tee ./scripts/logs/format-imports.log
+bash ./scripts/lint.sh | tee ./scripts/logs/lint.log
 
 exit 0
