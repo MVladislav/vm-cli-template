@@ -3,11 +3,8 @@
     with needed dependencies
 '''
 import os
-from subprocess import check_call
 
-from setuptools import find_packages, setup
-from setuptools.command.develop import develop
-from setuptools.command.install import install
+from setuptools import setup
 
 try:
     from dotenv import load_dotenv
@@ -36,57 +33,13 @@ SCRIPT_INSTALL: str = os.getenv('VM_SCRIPT_INSTALL', 'no')
 def main():
     PROJECT_NAME_SLUG = slugify(PROJECT_NAME)
     setup(
-        # name=PROJECT_NAME,
-        # version=VERSION,
-        # license='GNU AGPLv3',
-        # description=PROJECT_NAME,
-        # long_description=read_long_description(),
-        # long_description_content_type='text/markdown',
-        # author='MVladislav',
-        # author_email='info@mvladislav.online',
-        # packages=find_packages(),
-        # data_files=[('', ['requirements.txt', 'scripts/setup.sh', 'scripts/setup-dev.sh'])],
-        # include_package_data=True,
-        cmdclass={
-            'develop': PostDevelopCommand,
-            'install': PostInstallCommand,
-        },
         install_requires=read_requirements(),
-        # python_requires='>=3.8',
-        # zip_safe=True,
         entry_points=f'''
             [console_scripts]
-            {PROJECT_NAME_SLUG}=app.main:cli
+            {PROJECT_NAME_SLUG}=vm_cli.main:cli
         ''',
     )
 
-# ------------------------------------------------------------------------------
-#
-# POST installer
-#
-# ------------------------------------------------------------------------------
-
-
-class PostDevelopCommand(develop):
-    '''
-        Post-installation for development mode.
-    '''
-
-    def run(self):
-        if isinstance(SCRIPT_INSTALL, str) and SCRIPT_INSTALL == 'yes':
-            check_call(['/bin/bash', './scripts/setup-dev.sh'])
-        develop.run(self)
-
-
-class PostInstallCommand(install):
-    '''
-        Post-installation for installation mode.
-    '''
-
-    def run(self):
-        if isinstance(SCRIPT_INSTALL, str) and SCRIPT_INSTALL == 'yes':
-            check_call(['/bin/bash', './scripts/setup.sh'])
-        install.run(self)
 
 # ------------------------------------------------------------------------------
 #
