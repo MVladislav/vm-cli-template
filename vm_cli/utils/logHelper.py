@@ -28,11 +28,6 @@ def loggingMsgHandler(type: Union[LoggingMsgType, None]) -> Union[str, None]:
 
 class LogHelper:
 
-    # --------------------------------------------------------------------------
-    #
-    #
-    #
-    # --------------------------------------------------------------------------
     def __init__(self, logging_verbose: int = LOGGING_VERBOSE, logging_level: str = LOGGING_LEVEL):
         # configure logger for requested verbosity
         if logging_verbose >= 4:
@@ -52,13 +47,13 @@ class LogHelper:
             log_format = "%(message)s"
         else:
             log_format = "%(message)s"
-        # create a log objectfrom verboselogs
+
+        # create a log object from verboselogs
         verboselogs.install()
+
         for logger_name in [logging.getLogger()] + [logging.getLogger(name) for name in logging.root.manager.loggerDict]:
             for handler in logger_name.handlers:
                 logger_name.removeHandler(handler)
-            # # define an handle
-            # logger_name.addHandler(logging.StreamHandler())
             # define log level default
             logger_name.setLevel(logging.getLevelName(logging_level))
             # add colered logs
@@ -68,6 +63,8 @@ class LogHelper:
                 logger=logger_name,
             )
 
+            if logging_level == "INFO" and logger_name.name.startswith("httpx"):
+                logger_name.setLevel(logging.WARNING)
 
 # # add colered logs
 # coloredlogs.install(level=logging.getLevelName(logging_level), fmt=log_format)
